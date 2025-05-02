@@ -1,0 +1,45 @@
+
+def water_jug_solver(x, y, target):
+    visited = set()
+    queue = deque()
+    
+
+    while queue:
+        a, b, path = queue.popleft()
+
+        if (a, b) in visited:
+            continue
+        visited.add((a, b))
+
+        path = path + [((a, b))]
+
+        if a == target or b == target:
+            return path
+
+        next_states = [
+            (x, b),       # Fill Jug X
+            (a, y),       # Fill Jug Y
+            (0, b),       # Empty Jug X
+            (a, 0),       # Empty Jug Y
+            (0, a + b) if a + b <= y else (a - (y - b), y),  # Pour X -> Y
+            (a + b, 0) if a + b <= x else (x, b - (x - a))   # Pour Y -> X
+        ]
+
+        for state in next_states:
+            if state not in visited:
+                queue.append((state[0], state[1], path))
+
+    return None
+
+x = 4  # capacity of jug X
+y = 3  # capacity of jug Y
+target = 2  # goal
+
+solution = water_jug_solver(x, y, target)
+
+if solution:
+    print(f"Solution found in {len(solution)-1} steps:")
+    for step in solution:
+        print(f"Jug X: {step[0]}, Jug Y: {step[1]}")
+else:
+    print("No solution found.")
